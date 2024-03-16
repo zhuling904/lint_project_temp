@@ -4,6 +4,7 @@
 ### Features
 
 * add lint-stage & husky在commit时进行代码和样式检测 816c15d
+* changelog 自动生成 1691552
 * lint-stage 4f5affd
 * readme.md 9a02c4e
 * stylelint&保存自动修复 8e02f28
