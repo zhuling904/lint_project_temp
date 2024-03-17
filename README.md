@@ -615,7 +615,7 @@ postcss 一种对 css 编译的工具，类似 babel 对 js 一样通过各种�
 安装上面提到的所需的包：
 
 ```
-yarn add postcss-loader@8.1.1 postcss-flexbugs-fixes@5.0.2 postcss-preset-env@9.5.1 autoprefixer@10.4.18 postcss-normalize@10.0.1 -D
+yarn add postcss@8.4.35 postcss-loader@8.1.1 postcss-flexbugs-fixes@5.0.2 postcss-preset-env@9.5.1 autoprefixer@10.4.18 postcss-normalize@10.0.1 -D
 ```
 
 ```js
@@ -735,3 +735,6 @@ module.exports = {
 ```
 
 现在，在如果你在入口文件（比如我之前一直用的 `app.js` ）随便引一个写了 `display: flex` 语法的样式文件， `npm run start` 看看是不是自动加了浏览器前缀了呢？快试试吧！
+
+# 十、处理图片和文件
+

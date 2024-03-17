@@ -22,6 +22,8 @@ module.exports = {
   output: {
     filename: `js/[name]${isDev ? "" : ".[hash:8]"}.js`,
     path: resolve(PROJECT_PATH, "./dist"),
+    // 例如，生成的文件名将放在 images 目录，具有哈希、扩展名和查询字符串
+    assetModuleFilename: "images/[hash][ext][query]",
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -49,6 +51,7 @@ module.exports = {
 
   module: {
     rules: [
+      // 处理样式
       {
         test: /\.css$/,
         use: getCssLoaders(1),
@@ -76,6 +79,31 @@ module.exports = {
             },
           },
         ],
+      },
+      // 处理图片、文件、字体
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: "asset/resource",
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: "asset/resource",
+      },
+      {
+        test: /\.txt/,
+        type: "asset/source",
+      },
+      {
+        // 通用文件则使用 asset，此时会按照默认条件自动决定是否转换为 Data URI
+        test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
+        type: "asset",
+        parser: {
+          // 如果文件大小小于 8kb，那么会转换为 data URI，否则为单独文件。
+          // 8kb 是默认值，你可以根据需要进行调整
+          dataUrlCondition: {
+            maxSize: 8 * 1024, // 8kb
+          },
+        },
       },
     ],
   },
