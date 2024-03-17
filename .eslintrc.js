@@ -11,7 +11,8 @@ module.exports = {
   extends: [
     "standard-with-typescript",
     "plugin:react/recommended",
-    'prettier',
+    "prettier",
+    "plugin:storybook/recommended"
   ],
   settings: {
     "react": {
