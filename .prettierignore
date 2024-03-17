@@ -7,3 +7,4 @@
 /dist
 .stylelintrc.js
 /.vscode
+postcss.config.js

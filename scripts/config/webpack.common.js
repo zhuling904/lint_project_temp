@@ -1,6 +1,20 @@
 const { resolve } = require("path");
 const { isDev, PROJECT_PATH } = require("../constants");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+
+const getCssLoaders = (importLoaders) => [
+  "style-loader",
+  {
+    loader: "css-loader",
+    options: {
+      modules: false,
+      sourceMap: isDev,
+      importLoaders,
+    },
+  },
+  "postcss-loader",
+];
+
 module.exports = {
   entry: {
     app: resolve(PROJECT_PATH, "./src/app.js"),
@@ -32,4 +46,37 @@ module.exports = {
           },
     }),
   ],
+
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: getCssLoaders(1),
+      },
+      {
+        test: /\.less$/,
+        use: [
+          ...getCssLoaders(2),
+          {
+            loader: "less-loader",
+            options: {
+              sourceMap: isDev,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.scss$/,
+        use: [
+          ...getCssLoaders(2),
+          {
+            loader: "sass-loader",
+            options: {
+              sourceMap: isDev,
+            },
+          },
+        ],
+      },
+    ],
+  },
 };
