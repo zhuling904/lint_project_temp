@@ -2,7 +2,6 @@ module.exports = {
   extends: [
     'stylelint-config-standard',
 		'stylelint-config-rational-order',
-		// 'stylelint-config-idiomatic-order',
 		'prettier',
   ],
   plugins: [
@@ -18,6 +17,7 @@ module.exports = {
 		'no-descending-specificity': null,
 		'no-invalid-double-slash-comments': null,
 		'rule-empty-line-before': 'always',
+    // 有了这个插件stylelint-config-rational-order，根据分组有一个排序规则的就不需要下面的配置了，否则会冲突
 		// 'order/properties-order': [
 		// 	'position',
 		// 	'top',
