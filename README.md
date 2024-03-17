@@ -1,4 +1,4 @@
-# React + ts配置
+# React18 + ts5 + webpack5配置
 
 # 一、支持react
 
@@ -37,9 +37,9 @@ export default App
 ```js
 module.exports = {
   entry: {
-    app: resolve(PROJECT_PATH, './src/index.js'),
+    app: resolve(PROJECT_PATH, "./src/index.js"),
   },
-}
+};
 ```
 
 # 二、禁止eslint-typescript插件检测js
@@ -229,34 +229,35 @@ npx tsc --init
 {
   "compilerOptions": {
     // 基本配置
-    "target": "ES5",                          // 编译成哪个版本的 es
-    "module": "ESNext",                       // 指定生成哪个模块系统代码
+    "target": "ES5", // 编译成哪个版本的 es
+    "module": "ESNext", // 指定生成哪个模块系统代码
     "lib": ["dom", "dom.iterable", "esnext"], // 编译过程中需要引入的库文件的列表
-    "allowJs": true,                          // 允许编译 js 文件
-    "jsx": "react",                           // 在 .tsx 文件里支持 JSX
+    "allowJs": true, // 允许编译 js 文件
+    "jsx": "react", // 在 .tsx 文件里支持 JSX
     "isolatedModules": true,
-    "strict": true,                           // 启用所有严格类型检查选项
+    "strict": true, // 启用所有严格类型检查选项
 
     // 模块解析选项
-    "moduleResolution": "node",               // 指定模块解析策略
-    "esModuleInterop": true,                  // 支持 CommonJS 和 ES 模块之间的互操作性
-    "resolveJsonModule": true,                // 支持导入 json 模块
-    "baseUrl": "./",                          // 根路径
-    "paths": {																// 路径映射，与 baseUrl 关联
+    "moduleResolution": "node", // 指定模块解析策略
+    "esModuleInterop": true, // 支持 CommonJS 和 ES 模块之间的互操作性
+    "resolveJsonModule": true, // 支持导入 json 模块
+    "baseUrl": "./", // 根路径
+    "paths": {
+      // 路径映射，与 baseUrl 关联
       "Src/*": ["src/*"],
       "Components/*": ["src/components/*"],
       "Utils/*": ["src/utils/*"]
     },
 
     // 实验性选项
-    "experimentalDecorators": true,           // 启用实验性的ES装饰器
-    "emitDecoratorMetadata": true,            // 给源码里的装饰器声明加上设计类型元数据
+    "experimentalDecorators": true, // 启用实验性的ES装饰器
+    "emitDecoratorMetadata": true, // 给源码里的装饰器声明加上设计类型元数据
 
     // 其他选项
     "forceConsistentCasingInFileNames": true, // 禁止对同一个文件的不一致的引用
-    "skipLibCheck": true,                     // 忽略所有的声明文件（ *.d.ts）的类型检查
-    "allowSyntheticDefaultImports": true,     // 允许从没有设置默认导出的模块中默认导入
-    "noEmit": true														// 只想使用tsc的类型检查作为函数时（当其他工具（例如Babel实际编译）时）使用它
+    "skipLibCheck": true, // 忽略所有的声明文件（ *.d.ts）的类型检查
+    "allowSyntheticDefaultImports": true, // 允许从没有设置默认导出的模块中默认导入
+    "noEmit": true // 只想使用tsc的类型检查作为函数时（当其他工具（例如Babel实际编译）时）使用它
   },
   "exclude": ["node_modules"]
 }
@@ -272,10 +273,10 @@ npx tsc --init
 比如不能重复 `export` ：
 
 ```ts
-import { add } from './utils'
-add()
+import { add } from "./utils";
+add();
 
-export { add } // 会报错
+export { add }; // 会报错
 ```
 
 比如每个文件必须是作为独立的模块：
@@ -284,8 +285,8 @@ export { add } // 会报错
 const print = (str: string) => { console.log(str) } // 会报错，没有模块导出
 
 // 必须有 export
-export print = (str: string) => { 
-  console.log(str) 
+export print = (str: string) => {
+  console.log(str)
 }
 ```
 
@@ -295,22 +296,22 @@ export print = (str: string) => {
 
 ```ts
 // node_modules/test/index.js
-exports = test
+exports = test;
 ```
 
 使用此包：
 
 ```ts
 // 我们项目中的 app.tsx
-import * as test from 'test'
-test()
+import * as test from "test";
+test();
 ```
 
 开启 `esModuleInterop` 后，直接可如下使用：
 
 ```js
-import test from 'test'
-test()
+import test from "test";
+test();
 ```
 
 ## 5.baseUrl&paths&配置别名
@@ -378,7 +379,7 @@ settings: {
 ```
 yarn add  @babel/preset-env@7.24.0 @babel/plugin-transform-runtime@7.24.0 -D
 
-yarn add @babel/runtime-corejs3@7.24.0 -S 
+yarn add @babel/runtime-corejs3@7.24.0 -S
 ```
 
 > 注意： `@babel/runtime-corejs3` 的安装为生产依赖。
@@ -411,7 +412,6 @@ yarn add @babel/runtime-corejs3@7.24.0 -S
     ]
   ]
 }
-
 ```
 
 **到此为止，我们的 react+typescript 项目开发环境已经可行了，就是说现在已经可以正常进行开发了，但是针对开发环境和生产环境，我们能做的优化还有很多，大家继续加油！**
