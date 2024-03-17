@@ -16,7 +16,13 @@ module.exports = {
   settings: {
     "react": {
       "version": "detect" // 自动检测 React 版本
-    }
+    },
+    'import/resolver': {
+      node: {
+        extensions: ['.tsx', '.ts', '.js', '.json'],
+      },
+      typescript: {},
+    },
   },
   overrides: [
     // 检测ts和tsx，注意files要包括文件，否则会报错

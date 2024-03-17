@@ -270,3 +270,49 @@ npx tsc --init
 - `isolatedModules` ：可以提供额外的一些语法检查。
 
 比如不能重复 `export` ：
+
+```ts
+import { add } from './utils'
+add()
+
+export { add } // 会报错
+```
+
+比如每个文件必须是作为独立的模块：
+
+```ts
+const print = (str: string) => { console.log(str) } // 会报错，没有模块导出
+
+// 必须有 export
+export print = (str: string) => { 
+  console.log(str) 
+}
+```
+
+- `esModuleInterop` ：允许我们导入符合 es6 模块规范的 CommonJS 模块，下面做简单说明。
+
+比如某个包为 `test.js` ：
+
+```ts
+// node_modules/test/index.js
+exports = test
+```
+
+使用此包：
+
+```ts
+// 我们项目中的 app.tsx
+import * as test from 'test'
+test()
+```
+
+开启 `esModuleInterop` 后，直接可如下使用：
+
+```js
+import test from 'test'
+test()
+```
+
+## 5.baseUrl&paths
+
+<img src="./assets/image-20240317192251052.png" alt="image-20240317192251052" style="zoom: 25%;" />

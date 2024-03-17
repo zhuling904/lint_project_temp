@@ -50,6 +50,11 @@ module.exports = {
   ],
   resolve: {
     extensions: [".tsx", ".ts", ".js", ".json"],
+    alias: {
+      "@src": resolve(PROJECT_PATH, "./src"),
+      "@components": resolve(PROJECT_PATH, "./src/components"),
+      "@utils": resolve(PROJECT_PATH, "./src/utils"),
+    },
   },
   module: {
     rules: [
