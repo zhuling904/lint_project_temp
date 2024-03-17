@@ -17,7 +17,7 @@ const getCssLoaders = (importLoaders) => [
 
 module.exports = {
   entry: {
-    app: resolve(PROJECT_PATH, "./src/app.js"),
+    app: resolve(PROJECT_PATH, "./src/index.tsx"),
   },
   output: {
     filename: `js/[name]${isDev ? "" : ".[hash:8]"}.js`,
@@ -48,7 +48,9 @@ module.exports = {
           },
     }),
   ],
-
+  resolve: {
+    extensions: [".tsx", ".ts", ".js", ".json"],
+  },
   module: {
     rules: [
       // 处理样式
@@ -104,6 +106,13 @@ module.exports = {
             maxSize: 8 * 1024, // 8kb
           },
         },
+      },
+      // 处理jsx、ts、js
+      {
+        test: /\.(tsx?|js)$/,
+        loader: "babel-loader",
+        options: { cacheDirectory: true },
+        exclude: /node_modules/,
       },
     ],
   },
