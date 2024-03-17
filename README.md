@@ -244,9 +244,9 @@ npx tsc --init
     "baseUrl": "./", // 根路径
     "paths": {
       // 路径映射，与 baseUrl 关联
-      "Src/*": ["src/*"],
-      "Components/*": ["src/components/*"],
-      "Utils/*": ["src/utils/*"]
+      "@src/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@utils/*": ["src/utils/*"]
     },
 
     // 实验性选项
@@ -259,7 +259,9 @@ npx tsc --init
     "allowSyntheticDefaultImports": true, // 允许从没有设置默认导出的模块中默认导入
     "noEmit": true // 只想使用tsc的类型检查作为函数时（当其他工具（例如Babel实际编译）时）使用它
   },
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*" // 这将包括 src 目录下的所有文件
+  ]
 }
 ```
 
