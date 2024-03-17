@@ -738,3 +738,43 @@ module.exports = {
 
 # 十、处理图片和文件
 
+```
+// 处理图片、文件、字体
+{
+  test: /\.(png|svg|jpg|jpeg|gif)$/i,
+  type: "asset/resource",
+},
+{
+  test: /\.(woff|woff2|eot|ttf|otf)$/i,
+  type: "asset/resource",
+},
+{
+  test: /\.txt/,
+  type: "asset/source",
+},
+{
+  // 通用文件则使用 asset，此时会按照默认条件自动决定是否转换为 Data URI
+  test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
+  type: "asset",
+  parser: {
+    // 如果文件大小小于 8kb，那么会转换为 data URI，否则为单独文件。
+    // 8kb 是默认值，你可以根据需要进行调整
+    dataUrlCondition: {
+      maxSize: 8 * 1024, // 8kb
+    },
+  },
+},
+```
+
+在Webpack 5中处理图片、文件、字体等资源类型非常简单，因为Webpack 5内置了资源模块（Asset Modules），这是一类模块类型，它允许使用资源文件（字体、图标等）而无需配置额外的loader。
+
+资源模块提供了四种类型：
+
+- `asset/resource`: 发送一个单独的文件并导出 URL。之前通过使用 `file-loader` 实现。
+- `asset/inline`: 导出一个资源的 data URI。之前通过使用 `url-loader` 实现。
+- `asset/source`: 导出资源的源代码。之前通过使用 `raw-loader` 实现。
+- `asset`: 在导出一个 data URI 和发送一个单独的文件之间自动选择。之前通过使用 `url-loader` 并且配置资源体积限制实现。
+
+针对不同类型的资源，你可以按以下方式添加规则到Webpack配置
+
+以上是Webpack 5处理静态资源的基本配置，理解和使用资源模块可以使得资源处理更简单有效。这些配置项取代了之前在Webpack 4及以前需要使用的file-loader、url-loader和raw-loader。使用资源模块，配置变得更简洁明了，减少了构建配置的复杂性。在大多数情况下，默认的配置已经可以满足日常开发的需要。
