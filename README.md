@@ -313,6 +313,105 @@ import test from 'test'
 test()
 ```
 
-## 5.baseUrl&paths
+## 5.baseUrl&paths&配置别名
 
 <img src="./assets/image-20240317192251052.png" alt="image-20240317192251052" style="zoom: 25%;" />
+
+我在 `app.js` 中要引入 `src/components` 下的 `Header` 组件，以往的方式是：
+
+```
+import Header from './components/Header'
+```
+
+大家可能觉得，蛮好的啊，没毛病。但是我这里是因为 `app.tsx` 和 `components` 是同级的，试想一下如果你在某个层级很深的文件里要用 `components` ，那就是疯狂 `../../../..` 了，所以我们要学会使用它，并结合 webpack 的 `resolve.alias` 使用更香。
+
+但是想用它麻烦还蛮多的，咱一步步拆解它。
+
+首先 `baseUrl` 一定要设置正确，我们的 `tsconfig.json` 是放在项目根目录的，那么 `baseUrl` 设为 `./` 就代表了项目根路径。于是， `paths` 中的每一项路径映射，比如 `["src/*"]` 其实就是相对根路径。
+
+如果大家像上面一样配置了，并自己尝试用以下方式开始进行模块的引入：
+
+```
+import Header from '@components/Header'
+```
+
+因为 eslint 的原因，是会报错的：
+
+![image-20240317193344275](./assets/image-20240317193344275.png)
+
+这个时候需要改 `.eslintrc.js` 文件的配置了，首先得安装 [eslint-import-resolver-typescript](https://github.com/alexgorbatchev/eslint-import-resolver-typescript) ：
+
+```
+yarn add eslint-import-resolver-typescript@3.6.1 -D
+```
+
+然后在 `.eslintrc.js` 文件的 `setting` 字段修改为以下代码：
+
+```
+settings: {
+  'import/resolver': {
+    node: {
+      extensions: ['.tsx', '.ts', '.js', '.json'],
+    },
+    typescript: {},
+  },
+},
+```
+
+是的，只需要添加 `typescript: {}` 即可，这时候再去看已经没有报错了。并且是index的文件可以直接不用写，只需要到header层就行了。
+但是上面我们完成的工作仅仅是对于编辑器来说可识别这个路径映射，我们需要在 `webpack.common.js` 中的 `resolve.alias` 添加相同的映射规则配置：
+
+![image-20240317193528781](./assets/image-20240317193528781.png)
+
+![image-20240317193555604](./assets/image-20240317193555604.png)
+
+现在，两者一致就可以正常开发和打包了！可能有的小伙伴会疑惑，我只配置 webpack 中的 alias 不就行了吗？虽然开发时会有报红，但并不会影响到代码的正确，毕竟打包或开发时 webpack 都会进行路径映射替换。是的，的确是这样，但是在 `tsconfig.json` 中配置，会给我们增加智能提示，比如我打字打到 `@com` ，编辑器就会给我们提示正确的 `@components` ，而且其下面的文件还会继续提示。
+
+# 五、配置es6+转es5
+
+之前我们已经使用 babel 去解析 react 语法和 typescript 语法了，但是目前我们所做的也仅仅如此，你在代码中用到的 ES6+ 语法编译之后依然全部保留，然而不是所有浏览器都能支持 ES6+ 语法的，这时候就需要[@babel/preset-env](https://babeljs.io/docs/en/next/babel-preset-env.html) 来做这个苦力活了，它会根据设置的目标浏览器环境（browserslist）找出所需的插件去转译 ES6+ 语法。比如 `const` 或 `let` 转译为 `var` 。
+
+但是遇到 `Promise` 或 `.includes` 这种新的 es 特性，是没办法转译到 es5 的，除非我们把这中新的语言特性的实现注入到打包后的文件中，不就行了吗？我们借助 [@babel/plugin-transform-runtime](https://www.babeljs.cn/docs/babel-plugin-transform-runtime) 这个插件，它和 `@babel/preset-env` 一样都能提供 ES 新API 的垫片，都可实现按需加载，但前者不会污染原型链。
+
+另外，babel 在编译每一个模块的时候在需要的时候会插入一些辅助函数例如 `_extend` ，每一个需要的模块都会生成这个辅助函数，显而易见这会增加代码的冗余，[@babel/plugin-transform-runtime](https://www.babeljs.cn/docs/babel-plugin-transform-runtime) 这个插件会将所有的辅助函数都从 `@babel/runtime-corejs3` 导入（我们下面使用 corejs3），从而减少冗余性。
+
+```
+yarn add  @babel/preset-env@7.24.0 @babel/plugin-transform-runtime@7.24.0 -D
+
+yarn add @babel/runtime-corejs3@7.24.0 -S 
+```
+
+> 注意： `@babel/runtime-corejs3` 的安装为生产依赖。
+
+修改 `.babelre` 如下：
+
+```json
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        // 防止babel将任何模块类型都转译成CommonJS类型，导致tree-shaking失效问题
+        "modules": false
+      }
+    ],
+    "@babel/preset-react",
+    "@babel/preset-typescript"
+  ],
+  "plugins": [
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "corejs": {
+          "version": 3,
+          "proposals": true
+        },
+        "useESModules": true
+      }
+    ]
+  ]
+}
+
+```
+
+**到此为止，我们的 react+typescript 项目开发环境已经可行了，就是说现在已经可以正常进行开发了，但是针对开发环境和生产环境，我们能做的优化还有很多，大家继续加油！**
