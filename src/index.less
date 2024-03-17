@@ -1,9 +1,27 @@
 .father {
+  /* Positioning */
+  position: absolute;
+  z-index: 10;
+
+  /* Box Model */
   display: block;
+  margin: 10px;
+  padding: 10px;
   width: 100px;
   height: 100px;
+  border: 1px solid #888;
+  border-radius: 4px;
+  text-align: center;
 
-  .child {
-    height: 100px;
-  }
+  /* Typography */
+  color: #888;
+
+  /* Visual */
+  background-color: #eee;
+  opacity: 1;
+  inset: 0;
+  font:
+    normal 16px Helvetica,
+    sans-serif;
+  line-height: 1.3;
 }
